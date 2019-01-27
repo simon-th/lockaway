@@ -58,7 +58,7 @@ client = smartcar.AuthClient(
     client_secret = credentials['CLIENT_SECRET'],
     redirect_uri = credentials['REDIRECT_URI'],
     scope = ['read_vehicle_info', 'control_security', 'control_security:unlock', 'control_security:lock', 'read_location'],
-    test_mode=True
+    test_mode=False
 )
 
 
@@ -171,7 +171,7 @@ def unlock():
         print('unlocked!')
     else:
         pass
-    return redirect('/index')
+    return render_template('/index')
 
 @app.route('/lock', methods=['GET'])
 def lock():
@@ -182,7 +182,7 @@ def lock():
     longitude = vehicle_global.location()['data']['longitude']
     vehicle_global.lock()
     print('locked!')
-    return redirect('/index')
+    return render_template('/index')
 
 @app.route('/locate', methods=['GET', 'POST'])
 def locate():
