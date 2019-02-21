@@ -1,0 +1,64 @@
+#map {
+    width: 100%;
+    height: 600px;
+    background-color: black;
+}
+
+a {
+    color: white;
+}
+
+a:hover {
+    color: #fdc029;
+    text-decoration: none;
+}
+
+.login-title {
+    padding: 4rem;
+}
+
+.navbar {
+    padding: 2rem;
+}
+
+.title-lock {
+    color: #fdc029;
+}
+
+.title {
+    letter-spacing: 0.7rem;
+    color: white;
+}
+
+.bg-dark {
+    color: white;
+    background: black !important;
+    text-transform: uppercase;
+}
+
+.btn {
+    background: #151515;
+    text-transform: uppercase;
+    margin: 2rem;
+    color: #fdc029;
+}
+
+.jumbotron {
+    background: black;
+    color: white;
+    padding-top: 6rem;
+    padding-bottom: 1rem;
+}
+
+.athbtn {
+    padding-top: 2rem;
+}
+
+body {
+    text-align: center;
+    background: black;
+    color: white;
+    text-transform: uppercase;
+    font-family: 'Roboto';
+    color: white;
+}

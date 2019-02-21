@@ -1,0 +1,185 @@
+{% extends "base.html" %} {% block content %}
+<div class="jumbotron">
+  <button type="button" class="btn">
+    <a href="{{ url_for('lock') }}">Lock</a>
+  </button>
+  <button type="button" class="btn">
+    <a href="{{ url_for('unlock') }}">Unlock</a>
+	</button>
+	<button type="button" class="btn">
+			<a href="{{ url_for('locate') }}">Locate</a>
+		</button>
+  <button type="button" class="btn">
+    <a href="{{ url_for('dashboard') }}">Dashboard</a>
+  </button>
+  
+  <br />
+</div>
+<div id="map"></div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+    var im = 'http://www.robotwoods.com/dev/misc/bluecircle.png';
+
+    var map;
+  	var markers = [];
+  	var userMarker;
+  	var carMarker;
+			// Initialize and add the map
+			function initMap() {
+				var carLocation = {lat: {{latitude}}, lng: {{longitude}}};
+				map = new google.maps.Map(
+							document.getElementById('map'), {center: carLocation,
+							zoom: 16,
+							// styles
+				});
+				carMarker = new google.maps.Marker({
+             position: carLocation,
+  					 map: map,
+					 });
+					carMarker.setMap(map);
+					if (navigator.geolocation) {
+						navigator.geolocation.getCurrentPosition(function(position) {
+							var userPos = {
+								lat: position.coords.latitude,
+								lng: position.coords.longitude
+							};
+							userMarker = new google.maps.Marker({
+								position: userPos,
+								map: map,
+								icon: im
+							 });
+							 userMarker.setMap(map);
+								navigator.geolocation.watchPosition((position) => {
+									console.log('watchPosition', position);
+									const userLat = position.coords.latitude;
+									const userLng = position.coords.longitude;
+									const userData = {
+										userLat: userLat,
+										userLng: userLng
+									}
+									const userCoord = new google.maps.LatLng(userLat,userLng);
+									userMarker.setPosition(userCoord);
+									// const fetchData = {
+									// 	method: 'POST',
+									// 	body: JSON.stringify({
+									// 		userLat: userLat,
+									// 		userLng: userLng
+									// 	}),
+									// 	headers: {'Content-Type': 'application/json'}
+									// }
+									fetch('/locate').then(async (res1)=>{ 
+									const rawRes = await fetch('/api/carLocation');
+									const response = await rawRes.json();
+									const carCoord = new google.maps.LatLng(response.lat, response.lng);
+									carMarker.setPosition(carCoord);
+									const dist = google.maps.geometry.spherical.computeDistanceBetween(carCoord, userCoord);
+									console.log('carLocation', response.lat, response.lng, dist);
+									if (dist < 20) {
+										fetch('/unlock').then(()=>{
+											console.log('unlocked')
+										});
+									} else {
+										fetch('/lock').then(()=>{
+											console.log('locked')
+										});
+									}
+									map.setCenter(userCoord);
+								});
+			});
+		});
+	}
+}
+
+     const styles = [
+                 {elementType: 'geometry', stylers: [{color: '#000000'}]},
+                 {elementType: 'labels.text.stroke', stylers: [{color: '#212121'}]},
+                 {elementType: 'labels.text.fill', stylers: [{color: '#757575'}]},
+                 {
+                   featureType: 'administrative.locality',
+                   elementType: 'labels.text.fill',
+                   stylers: [{color: '#d59563'}]
+                 },
+                 {
+                   featureType: 'poi',
+                   elementType: 'labels.text.fill',
+                   stylers: [{color: '#fdc029'}]
+                 },
+                 {
+                   featureType: 'poi.park',
+                   elementType: 'geometry',
+                   stylers: [{color: '#212121'}]
+                 },
+                 {
+                   featureType: 'poi.park',
+                   elementType: 'labels.text.fill',
+                   stylers: [{color: '#757575'}]
+                 },
+                 {
+                   featureType: 'road',
+                   elementType: 'geometry',
+                   stylers: [{color: '#38414e'}]
+                 },
+                 {
+                   featureType: 'road',
+                   elementType: 'geometry.stroke',
+                   stylers: [{color: '#212a37'}]
+                 },
+                 {
+                   featureType: 'road',
+                   elementType: 'labels.text.fill',
+                   stylers: [{color: '#9ca5b3'}]
+                 },
+                 {
+                   featureType: 'road.highway',
+                   elementType: 'geometry',
+                   stylers: [{color: '#746855'}]
+                 },
+                 {
+                   featureType: 'road.highway',
+                   elementType: 'geometry.stroke',
+                   stylers: [{color: '#1f2835'}]
+                 },
+                 {
+                   featureType: 'road.highway',
+                   elementType: 'labels.text.fill',
+                   stylers: [{color: '#f3d19c'}]
+                 },
+                 {
+                   featureType: 'transit',
+                   elementType: 'geometry',
+                   stylers: [{color: '#2f3948'}]
+                 },
+                 {
+                   featureType: 'transit.station',
+                   elementType: 'labels.text.fill',
+                   stylers: [{color: '#d59563'}]
+                 },
+                 {
+                   featureType: 'water',
+                   elementType: 'geometry',
+                   stylers: [{color: '#17263c'}]
+                 },
+                 {
+                   featureType: 'water',
+                   elementType: 'labels.text.fill',
+                   stylers: [{color: '#515c6d'}]
+                 },
+                 {
+                   featureType: 'water',
+                   elementType: 'labels.text.stroke',
+                   stylers: [{color: '#17263c'}]
+                 }
+               ]
+</script>
+<!--Load the API from the specified URL
+        * The async attribute allows the browser to render the page while the API loads
+        * The key parameter will contain your own API key (which is not needed for this tutorial)
+        * The callback parameter executes the initMap() function
+        -->
+<script
+  async
+  defer
+  src="https://maps.googleapis.com/maps/api/js?&libraries=geometry&callback=initMap&key=AIzaSyA3gdV6x5rIZlHWQcOqaHtUmIHukhpRGZk"
+></script>
+
+{% endblock %}

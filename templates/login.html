@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lockaway</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/main.css') }}">
+    <!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700" rel="stylesheet">
+    <style>
+        img {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            padding-top: 20px;
+            padding-bottom: 20px;
+            align-items: center;
+        }
+        input {
+            margin-left: auto;
+            margin-right: auto;
+            padding-left: 75px;
+            color: #fdc029;
+        }
+    </style>    
+</head>
+<body>
+    <h1 class="title login-title"><span class="title-lock">Lock</span>away</h1>
+    <p>Welcome back, {{ username }}!</p>
+    <p>Please upload a picture of your key to continue.</p>
+    <!-- <img id="output" style="max-width: 600px; max-height: 400px; border: none;"/>
+    <input type="file" accept="image/*" onchange="loadFile(event)">
+    <script>
+        var loadFile = function(event) {
+            var output = document.getElementById('output');
+            output.src = URL.createObjectURL(event.target.files[0]);
+        };
+    </script> -->
+    {% if filename %}
+        <img src="..\static\{{filename}}" alt="image">
+        <p>{{azure}}</p>
+    {% else %}
+    <div class="athbtn">
+        <form method=post enctype=multipart/form-data>
+            <p><input type=file name=file>
+                <input type=submit value=Upload>
+        </form>
+    </div>
+    {% endif %}
+    <div class="athbtn">
+        <button type="button" class="btn" style="align-item: center;"><a href="{{url_for('authenticate')}}">Authenticate</a></button>
+    </div>
+</body>
+</html>
+
+

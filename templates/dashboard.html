@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1 class="title login-title"><span class="title-lock">Lock</span>away</h1>
+    <h2 style="color: white;">DASHBOARD</h2>
+    <div>     
+        <table align="center" cellspacing = "50" cellpadding ="20" style="margin: 0px auto;">
+            <tr>
+                <th align = "center" style="color: #fdc029;"> Make</th>
+                <th align = "center" style="color: #fdc029;"> : </th>
+                <td align = "center" style = "color: white;">{{ make }}</td>
+            </tr>
+            <tr>
+                <th align = "center" style="color: #fdc029;"> Model</th>
+                <th align = "center" style="color: #fdc029;"> : </th>
+                <td align = "center" style = "color: white;">{{ model }}</td>
+            </tr>
+            <tr>
+                <th align = "center" style="color: #fdc029;"> Year</th>
+                <th align = "center" style="color: #fdc029;"> : </th>
+                <td align = "center" style = "color: white;">{{ year }}</td>
+            </tr>
+        </table>
+    </div>
+{% endblock %}
